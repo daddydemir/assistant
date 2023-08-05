@@ -1,0 +1,10 @@
+.idea
+/vscode
+.vscode/
+.code
+prod.env
+
+todo
+
+test/
+logs/
