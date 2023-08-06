@@ -9,7 +9,7 @@ func main() {
 
 	config.Initialize()
 
-	rabbit.MessageQueue()
+	go rabbit.MessageQueue()
 	rabbit.ImageQueue()
 
 	for {
