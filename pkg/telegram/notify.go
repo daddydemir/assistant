@@ -3,10 +3,10 @@ package telegram
 import (
 	"bytes"
 	"fmt"
+	"github.com/daddydemir/assistant/internal/log"
 	"github.com/daddydemir/assistant/pkg/config"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"io/ioutil"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"strconv"
@@ -18,7 +18,7 @@ func SendMessage(message string) {
 	idInt, _ := strconv.Atoi(chatId)
 	_, err := config.Bot.Send(tgbotapi.NewMessage(int64(idInt), message))
 	if err != nil {
-		log.Print(err)
+		log.Errorln(err)
 	}
 
 }
@@ -52,6 +52,6 @@ func SendImage(filename string) {
 	client := &http.Client{}
 	_, err = client.Do(req)
 	if err != nil {
-		fmt.Println("Error sending photo:", err)
+		log.Infoln("Error sending photo:", err)
 	}
 }

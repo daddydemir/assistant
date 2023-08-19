@@ -1,10 +1,10 @@
 package rabbit
 
 import (
+	"github.com/daddydemir/assistant/internal/log"
 	"github.com/daddydemir/assistant/pkg/config"
 	"github.com/daddydemir/assistant/pkg/telegram"
 	"github.com/rabbitmq/amqp091-go"
-	"log"
 )
 
 func getQueue(name string) amqp091.Queue {
@@ -35,14 +35,14 @@ func MessageQueue() {
 		nil,
 	)
 	if err != nil {
-		log.Println(err)
+		log.Errorln(err)
 	}
 
 	var forever chan struct{}
 
 	go func() {
 		for d := range messages {
-			log.Printf("Received a message: %s", d.Body)
+			log.Infoln("Received a message: %s", d.Body)
 			telegram.SendMessage(string(d.Body))
 		}
 	}()
@@ -61,14 +61,14 @@ func ImageQueue() {
 		nil,
 	)
 	if err != nil {
-		log.Println(err)
+		log.Errorln(err)
 	}
 
 	var images chan struct{}
 
 	go func() {
 		for d := range messages {
-			log.Printf("Received a message: %s", d.Body)
+			log.Infoln("Received a message: %s", d.Body)
 			telegram.SendImage(string(d.Body))
 		}
 	}()

@@ -8,9 +8,9 @@ import (
 
 func Initialize() {
 	rabbitMQ()
-	println("RabbitMQ connection is start.")
+	log.Println("RabbitMQ connection is start.")
 	telegram()
-	println("Telegram bot is active.")
+	log.Println("Telegram bot is active.")
 }
 
 func Get(key string) string {
