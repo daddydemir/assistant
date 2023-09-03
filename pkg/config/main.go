@@ -14,7 +14,7 @@ func Initialize() {
 }
 
 func Get(key string) string {
-	err := godotenv.Load("C:\\Users\\demir\\dev\\assistant\\configs\\prod.env")
+	err := godotenv.Load("../configs/prod.env")
 	if err != nil {
 		log.Fatal(err)
 	}
