@@ -6,15 +6,17 @@ import (
 	"os"
 )
 
-func Initialize() {
-	rabbitMQ()
-	log.Println("RabbitMQ connection is start.")
-	telegram()
-	log.Println("Telegram bot is active.")
+var path string
+
+func init() {
+	path = os.Getenv("ENV_PATH")
+	if path == "" {
+		path = "../configs/prod.env"
+	}
 }
 
 func Get(key string) string {
-	err := godotenv.Load("../configs/prod.env")
+	err := godotenv.Load(path)
 	if err != nil {
 		log.Fatal(err)
 	}

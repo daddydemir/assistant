@@ -2,20 +2,23 @@ package main
 
 import (
 	"github.com/daddydemir/assistant/internal/log"
-	"github.com/daddydemir/assistant/pkg/config"
-	"github.com/daddydemir/assistant/pkg/rabbit"
+	"github.com/daddydemir/assistant/pkg/broker/rabbit"
+	"github.com/daddydemir/assistant/pkg/config/broker"
+	"github.com/daddydemir/assistant/pkg/notifier/telegram"
+	"github.com/daddydemir/assistant/pkg/service"
 )
 
 func main() {
 	log.InitLogger()
 	log.Infoln("Logger started.")
 
-	config.Initialize()
+	broker.StartRabbitmq()
 
-	go rabbit.MessageQueue()
-	rabbit.ImageQueue()
+	consumer := &rabbit.Consumer{}
+	notifier := &telegram.TelegramNotifier{}
 
-	for {
+	go service.SendMessage(consumer, notifier)
+	service.SendImage(consumer, notifier)
 
-	}
+	select {}
 }

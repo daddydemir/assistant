@@ -9,5 +9,7 @@ todo
 test/
 logs/
 loginfo/
+dist/
 
 *.log
+taskfile.yml
