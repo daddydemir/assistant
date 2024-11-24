@@ -1,9 +1,11 @@
 package rabbit
 
 import (
+	"context"
 	"fmt"
 	"github.com/daddydemir/assistant/pkg/config/broker"
 	amqp "github.com/rabbitmq/amqp091-go"
+	"log/slog"
 )
 
 type Consumer struct{}
@@ -56,4 +58,20 @@ func getQueue(queueName string) amqp.Queue {
 	}
 
 	return queue
+}
+
+func (c *Consumer) WriteMessage(queueName string, message string) error {
+	channel := broker.GetChannel()
+	ctx := context.Background()
+
+	err := channel.PublishWithContext(ctx, "", getQueue(queueName).Name, false, false, amqp.Publishing{
+		ContentType: "text/plain",
+		Body:        []byte(message),
+	})
+
+	if err != nil {
+		slog.Error("Failed to publish a message", err)
+		return err
+	}
+	return nil
 }
