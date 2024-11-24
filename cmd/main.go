@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/daddydemir/assistant/internal/log"
+	_ "github.com/daddydemir/assistant/internal/log/dlog"
 	"github.com/daddydemir/assistant/pkg/broker/rabbit"
 	"github.com/daddydemir/assistant/pkg/config/broker"
 	"github.com/daddydemir/assistant/pkg/notifier/telegram"
