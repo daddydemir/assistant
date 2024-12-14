@@ -2,7 +2,6 @@ package rabbit
 
 import (
 	"context"
-	"fmt"
 	"github.com/daddydemir/assistant/pkg/config/broker"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"log/slog"
@@ -27,7 +26,7 @@ func (c *Consumer) ReadMessage(queueName string) (<-chan any, error) {
 	)
 
 	if err != nil {
-		fmt.Println("Error consuming message", err)
+		slog.Error("Failed to consume a message", "error", err)
 		return nil, err
 	}
 
@@ -54,7 +53,7 @@ func getQueue(queueName string) amqp.Queue {
 		nil,
 	)
 	if err != nil {
-		fmt.Println("Failed to declare a queue:", err)
+		slog.Error("Failed to declare a queue", "error", err)
 	}
 
 	return queue
@@ -70,7 +69,11 @@ func (c *Consumer) WriteMessage(queueName string, message string) error {
 	})
 
 	if err != nil {
-		slog.Error("Failed to publish a message", err)
+		slog.Error(
+			"Failed to publish a message",
+			"queueName", queueName,
+			"message", message,
+			"error", err)
 		return err
 	}
 	return nil

@@ -3,11 +3,11 @@ package telegram
 import (
 	"bytes"
 	"fmt"
-	"github.com/daddydemir/assistant/internal/log"
 	"github.com/daddydemir/assistant/pkg/config"
 	"github.com/daddydemir/assistant/pkg/config/notifier"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"io/ioutil"
+	"log/slog"
 	"mime/multipart"
 	"net/http"
 	"strconv"
@@ -20,14 +20,15 @@ func (t *TelegramNotifier) NotifyMessage(message string) {
 
 	id, err := strconv.Atoi(chatId)
 	if err != nil {
-		fmt.Println("Error converting string to int", err)
+		slog.Error("NotifyMessage:Atoi", "error", err, "chatId", chatId)
 	}
 
 	api := notifier.GetApi()
-	_, err = api.Send(tgbotapi.NewMessage(int64(id), message))
+	m, err := api.Send(tgbotapi.NewMessage(int64(id), message))
 	if err != nil {
-		fmt.Println("Error sending message", err)
+		slog.Error("NotifyMessage:send", "error", err, "message", message)
 	}
+	slog.Info("NotifyMessage:send", "message", message, "m", m)
 }
 
 func (t *TelegramNotifier) NotifyImage(imagePath string) {
@@ -41,16 +42,19 @@ func (t *TelegramNotifier) NotifyImage(imagePath string) {
 	file, _ := ioutil.ReadFile(path)
 	_, err := fileWriter.Write(file)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Write", "error", err)
+		return
 	}
 	err = writer.WriteField("chat_id", config.Get("CHAT_ID"))
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("WriteField", "error", err)
+		return
 	}
 
 	err = writer.Close()
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Close", "error", err)
+		return
 	}
 
 	req, _ := http.NewRequest("POST", url, body)
@@ -59,8 +63,7 @@ func (t *TelegramNotifier) NotifyImage(imagePath string) {
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		log.Infoln("Error sending photo:", err)
-	} else {
-		fmt.Println("Resp: ", res)
+		slog.Error("Do", "error", err, "request", req)
 	}
+	slog.Info("Do", "request", req, "response", res)
 }
