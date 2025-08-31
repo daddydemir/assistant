@@ -3,6 +3,7 @@
 .vscode/
 .code
 prod.env
+.env
 
 todo
 

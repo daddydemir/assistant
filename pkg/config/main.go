@@ -11,7 +11,7 @@ var path string
 func init() {
 	path = os.Getenv("ENV_PATH")
 	if path == "" {
-		path = "../configs/prod.env"
+		path = ".env"
 	}
 }
 
